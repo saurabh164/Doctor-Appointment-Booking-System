@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="form-container">
+    <h2>Book an Appointment</h2>
+    <form id="appointmentForm">
+      <input type="text" id="patientName" placeholder="Patient Name" required>
+      <select id="doctor" required>
+        <option value="">Select Doctor</option>
+        <option>Dr. Aisha Khan — General Physician</option>
+        <option>Dr. Rohit Mehra — Pediatrics</option>
+        <option>Dr. Mira Desai — Dermatology</option>
+      </select>
+      <input type="date" id="date" required>
+      <input type="time" id="time" required>
+      <textarea id="reason" placeholder="Reason for visit"></textarea>
+      <button type="submit" class="btn">Book</button>
+    </form>
+
+    <div id=" "></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | HealthCare Appointment System</title>
+  <style>
+    /* ===== Reset & Global ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: linear-gradient(to right, #0a2342, #19376d);
+      color: #fff;
+    }
+
+    /* ===== Sidebar ===== */
+    .sidebar {
+      width: 250px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: fixed;
+      height: 100%;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      color: #00d4ff;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #eee;
+      display: block;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin: 8px 0;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover, .sidebar a.active {
+      background: #00d4ff;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .logout {
+      text-align: center;
+      padding: 12px;
+      background: crimson;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .logout:hover {
+      background: darkred;
+    }
+
+    /* ===== Main Content ===== */
+    .main {
+      margin-left: 270px;
+      padding: 30px;
+      flex: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      color: #00d4ff;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+
+    /* ===== Dashboard Cards ===== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
+    }
+
+    .card h3 {
+      color: #00d4ff;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    /* ===== Table ===== */
+    table {
+      width: 100%;
+      margin-top: 50px;
+      border-collapse: collapse;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    th {
+      background-color: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+      font-size: 1rem;
+    }
+
+    td {
+      color: #eee;
+    }
+
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .approve {
+      background: #28a745;
+      color: white;
+    }
+
+    .approve:hover {
+      background: #218838;
+    }
+
+    .reject {
+      background: #dc3545;
+      color: white;
+    }
+
+    .reject:hover {
+      background: #c82333;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ===== Sidebar ===== -->
+  <div class="sidebar">
+    <div>
+      <h2>🏥 Admin</h2>
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Doctors</a>
+      <a href="#">Patients</a>
+      <a href="#">Appointments</a>
+      <a href="#">Payments</a>
+    </div>
+    <div class="logout" onclick="logout()">Logout</div>
+  </div>
+
+  <!-- ===== Main Section ===== -->
+  <div class="main">
+    <header>
+      <h1>Admin Dashboard</h1>
+      <p>Welcome, <b>Administrator</b> 👋</p>
+    </header>
+
+    <!-- ===== Summary Cards ===== -->
+    <div class="cards">
+      <div class="card">
+        <h3>Total Doctors</h3>
+        <p id="totalDoctors">15</p>
+      </div>
+      <div class="card">
+        <h3>Total Patients</h3>
+        <p id="totalPatients">48</p>
+      </div>
+      <div class="card">
+        <h3>Appointments</h3>
+        <p id="totalAppointments">75</p>
+      </div>
+      <div class="card">
+        <h3>Pending Approvals</h3>
+        <p id="pendingAppointments">5</p>
+      </div>
+    </div>
+
+    <!-- ===== Appointment Table ===== -->
+    <h2 style="margin-top: 50px; color: #00d4ff;">Manage Appointments</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Doctor</th>
+          <th>Specialization</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="appointmentTable">
+        <tr>
+          <td>John Doe</td>
+          <td>Dr. Priya Sharma</td>
+          <td>Cardiology</td>
+          <td>2025-11-12</td>
+          <td>10:00 AM</td>
+          <td>Pending</td>
+          <td>
+            <button class="approve" onclick="approve(this)">Approve</button>
+            <button class="reject" onclick="reject(this)">Reject</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Rahul Singh</td>
+          <td>Dr. A. Mehta</td>
+          <td>Dermatology</td>
+          <td>2025-11-14</td>
+          <td>3:00 PM</td>
+          <td>Pending</td>
+          <td>
+            <button class="approve" onclick="approve(this)">Approve</button>
+            <button class="reject" onclick="reject(this)">Reject</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <footer>
+      © 2025 HealthCare Appointment System | Designed with ❤️ by G
+    </footer>
+  </div>
+
+  <script>
+    // Approve Appointment
+    function approve(btn) {
+      const row = btn.closest("tr");
+      row.cells[5].textContent = "Approved";
+      row.cells[5].style.color = "lightgreen";
+    }
+
+    // Reject Appointment
+    function reject(btn) {
+      const row = btn.closest("tr");
+      row.cells[5].textContent = "Rejected";
+      row.cells[5].style.color = "red";
+    }
+
+    // Logout
+    function logout() {
+      alert("Logged out successfully!");
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>

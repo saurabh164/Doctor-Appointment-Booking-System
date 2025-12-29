@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard | HealthCare Appointment System</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                  url('https://img.freepik.com/free-photo/hospital-corridor-blurred-background_1203-6302.jpg') no-repeat center center/cover;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    header h1 {
+      color: #00d4ff;
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .dashboard {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 15px;
+    }
+
+    h2 {
+      color: #00d4ff;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #e0e0e0;
+    }
+
+    .btn {
+      background-color: #00d4ff;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background-color: #009ec4;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    th {
+      background-color: rgba(0,212,255,0.2);
+      color: #00d4ff;
+    }
+
+    td {
+      color: #f1f1f1;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.6);
+      text-align: center;
+      padding: 15px 0;
+      color: #ccc;
+      font-size: 0.9rem;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🏥 HealthCare Appointment System</h1>
+  </header>
+
+  <section class="dashboard">
+    <h2>Welcome, <span id="patientName">Patient</span> 👋</h2>
+    <p>Manage your appointments and view your history below.</p>
+
+    <div class="actions">
+      <a href="/Saurabh 3/appointment.html" class="btn">📅 Book Appointment</a>
+      <button id="logoutBtn" class="btn">🚪 Logout</button>
+    </div>
+
+    <!-- Upcoming Appointments -->
+    <h2 style="margin-top:40px;">Upcoming Appointments</h2>
+    <table id="upcomingAppointments">
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Specialization</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="5">No upcoming appointments.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Previous Appointments -->
+    <h2 style="margin-top:40px;">Previous Appointments</h2>
+    <table id="previousAppointments">
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Specialization</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="5">No previous appointments.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p>© 2025 HealthCare Appointment System | Designed with ❤️ by Saurabh Pal </p>
+  </footer>
+
+  <script>
+    // Display logged-in patient's name
+    const loggedInPatient = JSON.parse(localStorage.getItem("loggedInPatient"));
+    const nameEl = document.getElementById("patientName");
+    if (loggedInPatient && loggedInPatient.name) {
+      nameEl.textContent = loggedInPatient.name;
+    }
+
+    // Load appointments
+    const appointments = JSON.parse(localStorage.getItem("appointments") || "[]");
+    const patientAppointments = appointments.filter(a => a.patientEmail === loggedInPatient?.email);
+
+    const today = new Date().toISOString().split('T')[0];
+    const upcomingBody = document.querySelector("#upcomingAppointments tbody");
+    const previousBody = document.querySelector("#previousAppointments tbody");
+
+    const upcoming = patientAppointments.filter(a => a.date >= today);
+    const previous = patientAppointments.filter(a => a.date < today);
+
+    // Fill Upcoming
+    if (upcoming.length > 0) {
+      upcomingBody.innerHTML = "";
+      upcoming.forEach(app => {
+        upcomingBody.innerHTML += `
+          <tr>
+            <td>${app.doctorName}</td>
+            <td>${app.specialization}</td>
+            <td>${app.date}</td>
+            <td>${app.time}</td>
+            <td>${app.status || "Confirmed"}</td>
+          </tr>`;
+      });
+    }
+
+    // Fill Previous
+    if (previous.length > 0) {
+      previousBody.innerHTML = "";
+      previous.forEach(app => {
+        previousBody.innerHTML += `
+          <tr>
+            <td>${app.doctorName}</td>
+            <td>${app.specialization}</td>
+            <td>${app.date}</td>
+            <td>${app.time}</td>
+            <td>${app.status || "Completed"}</td>
+          </tr>`;
+      });
+    }
+
+    // ✅ Logout - Redirect to Home Page
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("loggedInPatient");
+      alert("Logged out successfully!");
+      window.location.href = "index.html"; // Return to home page
+    });
+  </script>
+
+</body>
+</html>
+
+
